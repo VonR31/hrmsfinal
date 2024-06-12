@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 08, 2024 at 09:15 PM
+-- Generation Time: Jun 12, 2024 at 01:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `hr_db`
+-- Database: `db_hrms`
 --
 
 -- --------------------------------------------------------
@@ -42,7 +42,8 @@ CREATE TABLE `attendance` (
 --
 
 INSERT INTO `attendance` (`attendanceId`, `employeeId`, `userId`, `date`, `status`, `checkInTime`, `checkOutTime`) VALUES
-(1, 1, 2, '2024-06-08', 'Present', '23:26:04', '23:26:05');
+(9, 3, 4, '2024-06-10', 'Absent', '00:00:00', '16:07:52'),
+(13, 3, 4, '2024-06-12', 'On Going Leave', '00:00:00', '00:00:00');
 
 -- --------------------------------------------------------
 
@@ -60,9 +61,9 @@ CREATE TABLE `department` (
 --
 
 INSERT INTO `department` (`departmentId`, `departmentName`) VALUES
-(1, 'Finance Department'),
-(2, 'HR Department'),
-(3, 'IT Department');
+(4, 'IT Department'),
+(5, 'Finance Department'),
+(6, 'HR Department');
 
 -- --------------------------------------------------------
 
@@ -75,8 +76,8 @@ CREATE TABLE `employee` (
   `firstName` varchar(255) NOT NULL,
   `lastName` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `positionName` varchar(255) NOT NULL,
-  `departmentName` varchar(255) NOT NULL,
+  `positionId` int(11) NOT NULL,
+  `departmentId` int(11) NOT NULL,
   `dateOfHire` date NOT NULL,
   `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -85,8 +86,10 @@ CREATE TABLE `employee` (
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`employeeId`, `firstName`, `lastName`, `email`, `positionName`, `departmentName`, `dateOfHire`, `status`) VALUES
-(1, 'Jerie', 'Arocena', 'jarocena@gmail.com', 'Full-time', 'Finance Department', '2024-06-09', '');
+INSERT INTO `employee` (`employeeId`, `firstName`, `lastName`, `email`, `positionId`, `departmentId`, `dateOfHire`, `status`) VALUES
+(3, 'Ruiz', 'Sapio', 'ruizsapio@gmail.com', 5, 4, '2024-06-11', ''),
+(4, 'Jerie', 'Arocena', 'jarocena@gmail.com', 5, 4, '2024-06-11', ''),
+(8, 'Employee', 'employee', 'employee@gmail.com', 8, 6, '2024-06-13', '');
 
 -- --------------------------------------------------------
 
@@ -110,7 +113,35 @@ CREATE TABLE `employee_leave` (
 --
 
 INSERT INTO `employee_leave` (`leaveId`, `employeeId`, `firstName`, `lastName`, `leaveType`, `startDate`, `endDate`, `status`) VALUES
-(3, 1, 'Jerie', 'Arocena', 'Vacation leave', '2024-06-09', '2024-06-30', 'Disapproved');
+(4, 3, 'Ruiz', 'Sapio', 'Sick leave', '2024-06-11', '2024-06-15', 'Approved'),
+(6, 3, 'Ruiz', 'Sapio', 'Parental leave', '2024-06-13', '2024-06-30', 'Disapproved');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payroll`
+--
+
+CREATE TABLE `payroll` (
+  `payrollId` int(11) NOT NULL,
+  `employeeId` int(11) NOT NULL,
+  `positionId` int(11) NOT NULL,
+  `departmentId` int(11) NOT NULL,
+  `salary` decimal(10,2) NOT NULL,
+  `bonus` decimal(10,2) DEFAULT NULL,
+  `deductions` decimal(10,2) DEFAULT NULL,
+  `net_pay` decimal(10,2) GENERATED ALWAYS AS (`salary` + `bonus` - `deductions`) VIRTUAL,
+  `pay_date` date DEFAULT curdate(),
+  `status` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payroll`
+--
+
+INSERT INTO `payroll` (`payrollId`, `employeeId`, `positionId`, `departmentId`, `salary`, `bonus`, `deductions`, `pay_date`, `status`) VALUES
+(7, 3, 5, 4, 10000.00, 1000.00, 5000.00, '2024-06-10', ''),
+(8, 4, 5, 4, 10000.00, 20000.00, 10000.00, '2024-06-10', '');
 
 -- --------------------------------------------------------
 
@@ -121,7 +152,7 @@ INSERT INTO `employee_leave` (`leaveId`, `employeeId`, `firstName`, `lastName`, 
 CREATE TABLE `position` (
   `positionId` int(11) NOT NULL,
   `positionName` varchar(255) NOT NULL,
-  `salaryGrade` int(11) NOT NULL
+  `salaryGrade` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -129,10 +160,9 @@ CREATE TABLE `position` (
 --
 
 INSERT INTO `position` (`positionId`, `positionName`, `salaryGrade`) VALUES
-(1, 'Full-time', 40000),
-(2, 'Head', 80000),
-(3, 'Intern', 10000),
-(4, 'Part-time', 60000);
+(5, 'Head', 10000.00),
+(7, 'Intern', 5000.00),
+(8, 'Full-time', 2000.00);
 
 -- --------------------------------------------------------
 
@@ -147,13 +177,6 @@ CREATE TABLE `tasks` (
   `status` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tasks`
---
-
-INSERT INTO `tasks` (`tasksId`, `employeeId`, `task`, `status`, `created_at`) VALUES
-(3, 1, 'Create a word file', 'completed', '2024-06-08 15:25:49');
 
 -- --------------------------------------------------------
 
@@ -177,7 +200,10 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`userId`, `firstName`, `lastName`, `email`, `password`, `roles`, `employeeId`) VALUES
 (1, 'Von', 'Monfero', 'monferovon@gmail.com', 'admin', 'Admin', NULL),
-(2, 'Jerie', 'Arocena', 'jarocena@gmail.com', 'employee', 'Employee', 1);
+(4, 'Ruiz\r\n', 'Sapio', 'ruizsapio@gmail.com', '123456', 'Employee', 3),
+(5, 'Jerie', 'Arocena', 'jarocena@gmail.com', 'employee', 'Employee', 4),
+(8, 'Admin', 'admin', 'admin@gmail.com', 'admin', 'Admin', NULL),
+(11, 'Employee', 'employee', 'employee@gmail.com', 'employee', 'Employee', 8);
 
 --
 -- Indexes for dumped tables
@@ -195,15 +221,15 @@ ALTER TABLE `attendance`
 -- Indexes for table `department`
 --
 ALTER TABLE `department`
-  ADD PRIMARY KEY (`departmentName`);
+  ADD PRIMARY KEY (`departmentId`);
 
 --
 -- Indexes for table `employee`
 --
 ALTER TABLE `employee`
   ADD PRIMARY KEY (`employeeId`),
-  ADD KEY `fk_department_name` (`departmentName`),
-  ADD KEY `fk_position_name` (`positionName`);
+  ADD KEY `fk_department_id` (`departmentId`),
+  ADD KEY `fk_position_id` (`positionId`);
 
 --
 -- Indexes for table `employee_leave`
@@ -213,10 +239,19 @@ ALTER TABLE `employee_leave`
   ADD KEY `fk_employee_leave` (`employeeId`);
 
 --
+-- Indexes for table `payroll`
+--
+ALTER TABLE `payroll`
+  ADD PRIMARY KEY (`payrollId`),
+  ADD KEY `fk_employee_payroll` (`employeeId`),
+  ADD KEY `fk_position_payroll` (`positionId`),
+  ADD KEY `fk_department_payroll` (`departmentId`);
+
+--
 -- Indexes for table `position`
 --
 ALTER TABLE `position`
-  ADD PRIMARY KEY (`positionName`);
+  ADD PRIMARY KEY (`positionId`);
 
 --
 -- Indexes for table `tasks`
@@ -240,31 +275,49 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `attendanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `attendanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `department`
+--
+ALTER TABLE `department`
+  MODIFY `departmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employeeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `employeeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `employee_leave`
 --
 ALTER TABLE `employee_leave`
-  MODIFY `leaveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `leaveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `payroll`
+--
+ALTER TABLE `payroll`
+  MODIFY `payrollId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `position`
+--
+ALTER TABLE `position`
+  MODIFY `positionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `tasksId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `tasksId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
@@ -281,14 +334,22 @@ ALTER TABLE `attendance`
 -- Constraints for table `employee`
 --
 ALTER TABLE `employee`
-  ADD CONSTRAINT `fk_department_name` FOREIGN KEY (`departmentName`) REFERENCES `department` (`departmentName`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_position_name` FOREIGN KEY (`positionName`) REFERENCES `position` (`positionName`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_department_id` FOREIGN KEY (`departmentId`) REFERENCES `department` (`departmentId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_position_id` FOREIGN KEY (`positionId`) REFERENCES `position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `employee_leave`
 --
 ALTER TABLE `employee_leave`
   ADD CONSTRAINT `fk_employee_leave` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `payroll`
+--
+ALTER TABLE `payroll`
+  ADD CONSTRAINT `fk_department_payroll` FOREIGN KEY (`departmentId`) REFERENCES `department` (`departmentId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_employee_payroll` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_position_payroll` FOREIGN KEY (`positionId`) REFERENCES `position` (`positionId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tasks`
@@ -300,7 +361,7 @@ ALTER TABLE `tasks`
 -- Constraints for table `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `fk_user_employee` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_user_employee` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
