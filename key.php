@@ -11,9 +11,10 @@ if (isset($_POST['company_key'])) {
    }
 }
 ?>
+
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="/assets/css/adminReg.css">
+<link rel="stylesheet" href="./assets/css/adminReg.css">
 <head>
    <title>Enter Company Key</title>
 </head>

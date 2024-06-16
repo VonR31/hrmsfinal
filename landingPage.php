@@ -33,10 +33,9 @@
         </div>
         <div class="col-lg-6">
             <a class="btn" href="#home">Home</a>
-            <a class="btn" href="#feature">Features</a>
+            <a class="btn" href="#feature1">Features</a>
             <a class="btn" href="#about">About</a>
-            <a class="btn" href="#register">Register</a>
-            <a class="btn" href="#contactus">Contact Us</a>
+            <a class="btn" href="#contact">Contact Us</a>
             <span>|</span>
             <a class="btn" href="index.php">Log In</a>
         </div>
@@ -90,21 +89,7 @@
 		<!-- end divider -->
 
 		<!-- start feature -->
-		<section id="feature">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6 wow fadeInLeft" data-wow-delay="0.6s">
-						<h2 class="text-uppercase">PAGE FOR ADMINS</h2>
-						<p>The admin page of our System offers a range of robust features designed to streamline HR tasks and improve organizational efficiency. Key features include:</p>
-						<p><span><i class="fa fa-gear"></i></span>Comprehensive Management Tools: Streamline employee records, payroll, attendance, leave requests, and departmental structures with intuitive features designed for efficiency and accuracy.</p>
-						<p><i class="fa fa-list"></i>Insightful Analytics and Reporting: Generate detailed reports on employee statistics, attendance, leave history, and payroll expenditures, enabling informed decision-making and effective HR management.</p>
-					</div>
-					<div class="col-md-6 wow fadeInRight" data-wow-delay="0.6s">
-						<img src="./assets/img/software-image.png" class="img-responsive" alt="feature img">
-					</div>
-				</div>
-			</div>
-		</section>
+		
 		<!-- end feature -->
 
 		<!-- start feature1 -->
@@ -116,7 +101,7 @@
 					</div>
 					<div class="col-md-6 wow fadeInUp" data-wow-delay="0.6s">
 						<h2 class="text-uppercase">PAGE FOR EMPLOYEES</h2>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+						
 						<p><span><i class="fa fa-gears"></i></span>Personal and Task Management: Easily update personal profiles, change passwords, and manage assigned tasks with a user-friendly interface.</p>
 						<p><i class="fa fa-clipboard"></i>Access to Essential Records: View attendance logs, leave histories, and payroll details, and submit leave requests seamlessly for streamlined employee self-service.</p>
 					</div>
@@ -172,7 +157,7 @@
 					<div class="card col-md-4 wow fadeIn" data-wow-delay="0.6s">
 						<div class="about text-uppercase">
 							<div class="about-title">
-								<img src="/assets/img/Kristina.jpg" alt="" width="180">
+								<img src="./assets/img/Kristina.jpg" alt="" width="180">
 							</div>
 							<h4>Kristina Cueto</h4>
 							<h4>Database Designer</h4>
@@ -193,20 +178,7 @@
 		<!-- end about -->
 
 		<!-- start register -->
-		<section id="register">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6 wow fadeInLeft" data-wow-delay="0.6s">
-						<h2 class="text-uppercase">Create an account</h2>
-						<p> Creating an account for admin lets you use the admin page and to create an account for the employee go to employee tab and add an employee using the add employee button. </p>
-						<a href="key.php" class="btn">CREATE ADMIN ACCOUNT</a>
-					</div>
-					<div class="col-md-6 wow fadeInRight" data-wow-delay="0.6s">
-						<img src="./assets/img/feature.png" class="img-responsive" alt="feature img">
-					</div>
-				</div>
-			</div>
-		</section>
+		
 		<!-- end register -->
 
 		<!-- start contact -->
@@ -226,10 +198,10 @@
 						<div class="col-md-6 wow fadeInUp" data-wow-delay="0.6s">
 							<div class="contact-form">
 								<form action="#" method="post">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<input type="text" class="form-control" placeholder="Name">
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<input type="email" class="form-control" placeholder="Email">
 									</div>
 									<div class="col-md-12">
@@ -238,7 +210,7 @@
 									<div class="col-md-12">
 										<textarea class="form-control" placeholder="Message" rows="4"></textarea>
 									</div>
-									<div class="col-md-8">
+									<div class="col-md-12">
 										<input type="submit" class="form-control text-uppercase" value="Send">
 									</div>
 								</form>

@@ -279,7 +279,7 @@ if ($resultEmployees->num_rows > 0) {
         <div class="col-xl-12 col-sm-8 col-12 mt-5">
           <div class="row">
             <div class="col-auto mt-3">
-              <a class="btn-add" href="add-employee.php"><i data-feather="plus"></i> Add Person</a>
+              <a class="btn-add" href="add-employee.php"><i data-feather="plus"></i> Add Employee</a>
             </div>
             <div class="col-auto mt-1">
               <button type="button" class="btn-remove btn-danger" data-toggle="modal" data-target="#deleteAccountModal">

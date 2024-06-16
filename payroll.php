@@ -12,7 +12,14 @@ $firstName = $_SESSION['firstName'];
 $lastName = $_SESSION['lastName'];
 function fetchEmployees($conn)
 {
-    $query = "SELECT employeeId, CONCAT(firstName, ' ', lastName) AS fullName FROM employee";
+    $currentMonth = date('Y-m');
+    $query = "SELECT employeeId, CONCAT(firstName, ' ', lastName) AS fullName 
+              FROM employee 
+              WHERE employeeId NOT IN (
+                  SELECT employeeId 
+                  FROM payroll 
+                  WHERE DATE_FORMAT(pay_date, '%Y-%m') = '$currentMonth'
+              )";
     $result = mysqli_query($conn, $query);
 
     $employees = [];
@@ -21,6 +28,7 @@ function fetchEmployees($conn)
     }
     return $employees;
 }
+
 
 // Insert Payroll Details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -91,35 +99,7 @@ $query = "SELECT
           INNER JOIN position ON payroll.positionId = position.positionId";
 $result = mysqli_query($conn, $query);
 
-// Calculate total payroll expenses
-$total_query = "SELECT SUM(net_pay) AS total_payroll, COUNT(DISTINCT employeeId) AS employee_count 
-                FROM payroll 
-                WHERE MONTH(pay_date) = MONTH(CURRENT_DATE()) AND YEAR(pay_date) = YEAR(CURRENT_DATE())";
-$total_result = mysqli_query($conn, $total_query);
-$total_row = mysqli_fetch_assoc($total_result);
 
-// Get upcoming payroll dates from the payroll table
-$upcoming_query = "SELECT DISTINCT pay_date FROM payroll WHERE pay_date > CURRENT_DATE() ORDER BY pay_date ASC LIMIT 3";
-$upcoming_result = mysqli_query($conn, $upcoming_query);
-$upcoming_payroll_dates = [];
-while ($row = mysqli_fetch_assoc($upcoming_result)) {
-    $upcoming_payroll_dates[] = $row['pay_date'];
-}
-
-$query1 = "SELECT COUNT(*) AS total_rows FROM employee";
-$result1 = $conn->query($query1);
-
-if ($result === false) {
-    die("Error executing query: " . $conn->error);
-}
-
-if ($result1 === false) {
-    die("Error executing query: " . $conn->error);
-} else {
-    // Fetch the result
-    $row = $result1->fetch_assoc();
-    $total_rows = $row['total_rows'];
-}
 
 ?>
 
@@ -255,29 +235,7 @@ if ($result1 === false) {
                     </div>
                 </div>
 
-                <div class="col-12 mb-4">
-                    <label class="employee_count"><?php echo $total_rows; ?> Employees</label>
-                </div>
-
-                <div class="col-12 mt-4">
-                    <div class="card">
-                        <div class="card-header">
-                            Payroll Summary
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5>Total Payroll Expenses for this Month:</h5>
-                                    <p><?= htmlspecialchars($total_row['total_payroll']); ?></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5>Number of Employees Paid:</h5>
-                                    <p><?= htmlspecialchars($total_row['employee_count']); ?></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
 
 
                 <div class="col-xl-12 col-sm-12 ">
@@ -346,8 +304,7 @@ if ($result1 === false) {
                                                                             <?= htmlspecialchars($row['pay_date']); ?></p>
                                                                         <button type="button" class="btn btn-secondary"
                                                                             data-dismiss="modal">Close</button>
-                                                                        <a href="delete_payroll.php?employeeId=<?= $row['employeeId']; ?>"
-                                                                            class="btn btn-danger">Delete</a>
+                                                                        
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -433,7 +390,6 @@ if ($result1 === false) {
                                                 <label for="status">Status</label>
                                                 <select id="status" name="status" class="form-control">
                                                     <option value="Paid">Paid</option>
-                                                    <option value="Unpaid">Unpaid</option>
                                                 </select>
                                             </div>
 
@@ -495,7 +451,6 @@ if ($result1 === false) {
                     }
                 });
             }
-
 
 
     </script>

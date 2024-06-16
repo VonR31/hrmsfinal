@@ -127,3 +127,10 @@ body {
    justify-content: center;
    
 }
+
+.container input.btn {
+   background-color: #4017c6 !important;
+   color: #fff;
+}
+
+

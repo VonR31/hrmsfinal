@@ -56,11 +56,6 @@ $conn->close();
 ?>
 
 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -86,7 +81,7 @@ $conn->close();
         <h2>Sign In</h2>
         <input type="text" placeholder="Email" name="email" required>
         <input type="password" placeholder="Password" name="password" required>
-        <a href="#">Forget Your Password?</a>
+        
         <input type="submit" class="btn" value="Sign In" name="signIn">
       </form>
     </div>
@@ -94,10 +89,9 @@ $conn->close();
       <div class="toggle-container">
         <h1>Hello!</h1>
         <p>Welcome to HRHorizon</p>
-        
       </div>
     </div>
-  </div>
+ 
 </body>
 
 </html>
