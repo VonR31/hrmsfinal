@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 12, 2024 at 01:00 PM
+-- Generation Time: Jun 16, 2024 at 11:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,8 +42,15 @@ CREATE TABLE `attendance` (
 --
 
 INSERT INTO `attendance` (`attendanceId`, `employeeId`, `userId`, `date`, `status`, `checkInTime`, `checkOutTime`) VALUES
-(9, 3, 4, '2024-06-10', 'Absent', '00:00:00', '16:07:52'),
-(13, 3, 4, '2024-06-12', 'On Going Leave', '00:00:00', '00:00:00');
+(15, 3, 4, '2024-06-13', 'Present', '20:12:18', '20:12:23'),
+(16, 4, 5, '2024-06-13', 'Absent', '00:00:00', '00:00:00'),
+(17, 11, 17, '2024-06-13', 'On Going Leave', '00:00:00', '00:00:00'),
+(18, 12, 18, '2024-06-13', 'Present', '22:22:56', '22:22:58'),
+(19, 13, 20, '2024-06-14', 'Present', '07:31:44', '07:31:47'),
+(20, 3, 4, '2024-06-14', 'Present', '09:42:22', '00:00:00'),
+(21, 4, 5, '2024-06-14', 'Present', '07:32:26', '07:32:28'),
+(22, 12, 18, '2024-06-14', 'Absent', '00:00:00', '00:00:00'),
+(23, 11, 17, '2024-06-14', 'On Going Leave', '00:00:00', '00:00:00');
 
 -- --------------------------------------------------------
 
@@ -63,7 +70,10 @@ CREATE TABLE `department` (
 INSERT INTO `department` (`departmentId`, `departmentName`) VALUES
 (4, 'IT Department'),
 (5, 'Finance Department'),
-(6, 'HR Department');
+(6, 'HR Department'),
+(8, 'Sales Department'),
+(9, 'Sales Department'),
+(10, 'Logistic Department');
 
 -- --------------------------------------------------------
 
@@ -89,7 +99,11 @@ CREATE TABLE `employee` (
 INSERT INTO `employee` (`employeeId`, `firstName`, `lastName`, `email`, `positionId`, `departmentId`, `dateOfHire`, `status`) VALUES
 (3, 'Ruiz', 'Sapio', 'ruizsapio@gmail.com', 5, 4, '2024-06-11', ''),
 (4, 'Jerie', 'Arocena', 'jarocena@gmail.com', 5, 4, '2024-06-11', ''),
-(8, 'Employee', 'employee', 'employee@gmail.com', 8, 6, '2024-06-13', '');
+(10, 'Audrey', 'Alinea', 'audrey@gmail.com', 9, 4, '2024-06-14', ''),
+(11, 'Charles', 'Leonardo', 'charles@gmail.com', 8, 5, '2024-06-14', ''),
+(12, 'Elena', 'Cortez', 'elena@gmail.com', 7, 6, '2024-06-14', ''),
+(13, 'Zoltan', 'Gutierrez', 'zgut@gmail.com', 7, 8, '2024-06-15', ''),
+(14, 'Amiel ', 'Dioyo', 'amiel@gmail.com', 8, 5, '2024-06-15', '');
 
 -- --------------------------------------------------------
 
@@ -114,7 +128,10 @@ CREATE TABLE `employee_leave` (
 
 INSERT INTO `employee_leave` (`leaveId`, `employeeId`, `firstName`, `lastName`, `leaveType`, `startDate`, `endDate`, `status`) VALUES
 (4, 3, 'Ruiz', 'Sapio', 'Sick leave', '2024-06-11', '2024-06-15', 'Approved'),
-(6, 3, 'Ruiz', 'Sapio', 'Parental leave', '2024-06-13', '2024-06-30', 'Disapproved');
+(6, 3, 'Ruiz', 'Sapio', 'Parental leave', '2024-06-13', '2024-06-30', 'Disapproved'),
+(7, 3, 'Ruiz\r\n', 'Sapio', 'Family and Medical leave', '2024-06-14', '2024-06-30', 'Approved'),
+(8, 10, 'Audrey', 'Alinea', 'Public Holidays', '2024-06-14', '2024-06-30', 'Pending'),
+(9, 13, 'Zoltan', 'Gutierrez', 'Vacation leave', '2024-06-15', '2024-06-23', 'Approved');
 
 -- --------------------------------------------------------
 
@@ -128,8 +145,8 @@ CREATE TABLE `payroll` (
   `positionId` int(11) NOT NULL,
   `departmentId` int(11) NOT NULL,
   `salary` decimal(10,2) NOT NULL,
-  `bonus` decimal(10,2) DEFAULT NULL,
-  `deductions` decimal(10,2) DEFAULT NULL,
+  `bonus` decimal(10,2) NOT NULL,
+  `deductions` decimal(10,2) NOT NULL,
   `net_pay` decimal(10,2) GENERATED ALWAYS AS (`salary` + `bonus` - `deductions`) VIRTUAL,
   `pay_date` date DEFAULT curdate(),
   `status` varchar(255) NOT NULL
@@ -141,7 +158,9 @@ CREATE TABLE `payroll` (
 
 INSERT INTO `payroll` (`payrollId`, `employeeId`, `positionId`, `departmentId`, `salary`, `bonus`, `deductions`, `pay_date`, `status`) VALUES
 (7, 3, 5, 4, 10000.00, 1000.00, 5000.00, '2024-06-10', ''),
-(8, 4, 5, 4, 10000.00, 20000.00, 10000.00, '2024-06-10', '');
+(8, 4, 5, 4, 10000.00, 20000.00, 10000.00, '2024-06-10', ''),
+(11, 10, 9, 4, 35000.00, 10000.00, 100.00, '2024-06-14', 'Pending'),
+(12, 13, 7, 8, 5000.00, 10000.00, 5000.00, '2024-06-14', '');
 
 -- --------------------------------------------------------
 
@@ -162,7 +181,9 @@ CREATE TABLE `position` (
 INSERT INTO `position` (`positionId`, `positionName`, `salaryGrade`) VALUES
 (5, 'Head', 10000.00),
 (7, 'Intern', 5000.00),
-(8, 'Full-time', 2000.00);
+(8, 'Full-time', 2000.00),
+(9, 'Junior Programmer', 35000.00),
+(10, 'Part-time', 20000.00);
 
 -- --------------------------------------------------------
 
@@ -199,11 +220,13 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userId`, `firstName`, `lastName`, `email`, `password`, `roles`, `employeeId`) VALUES
-(1, 'Von', 'Monfero', 'monferovon@gmail.com', 'admin', 'Admin', NULL),
 (4, 'Ruiz\r\n', 'Sapio', 'ruizsapio@gmail.com', '123456', 'Employee', 3),
 (5, 'Jerie', 'Arocena', 'jarocena@gmail.com', 'employee', 'Employee', 4),
-(8, 'Admin', 'admin', 'admin@gmail.com', 'admin', 'Admin', NULL),
-(11, 'Employee', 'employee', 'employee@gmail.com', 'employee', 'Employee', 8);
+(17, 'Charles', 'Leonardo', 'charles@gmail.com', 'employee', 'Employee', 11),
+(18, 'Elena', 'Cortez', 'elena@gmail.com', 'employee', 'Employee', 12),
+(19, 'Von', 'Monfero', 'monferovon@gmail.com', 'admin', 'admin', NULL),
+(20, 'Zoltan', 'Gutierrez', 'zgut@gmail.com', 'employee', 'Employee', 13),
+(21, 'Russel', 'Monfero', 'russel@gmail.com', 'admin', 'admin', NULL);
 
 --
 -- Indexes for dumped tables
@@ -275,49 +298,49 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `attendanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `attendanceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-  MODIFY `departmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `departmentId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employeeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `employeeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `employee_leave`
 --
 ALTER TABLE `employee_leave`
-  MODIFY `leaveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `leaveId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `payroll`
 --
 ALTER TABLE `payroll`
-  MODIFY `payrollId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `payrollId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `position`
 --
 ALTER TABLE `position`
-  MODIFY `positionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `positionId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `tasksId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `tasksId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables
